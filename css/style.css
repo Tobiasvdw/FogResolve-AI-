@@ -1,0 +1,1353 @@
+:root {
+  --fog-density: 1;
+}
+
+/* Global cursor override - custom SVG cursor */
+* {
+  cursor: url('data:image/svg+xml;utf8,<svg width="32" height="32" viewBox="0 0 1938 1938" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1068.99 113.745C1464.59 159.501 1778.49 473.398 1824.25 868.995H1938V1069H1824.25C1778.49 1464.6 1464.6 1778.5 1068.99 1824.25V1938H868.994V1824.25C473.393 1778.5 159.493 1464.6 113.739 1069H0V868.995H113.74C159.498 473.398 473.396 159.501 868.994 113.745V0H1068.99V113.745ZM315.511 1069C358.759 1353.99 583.996 1579.23 868.994 1622.48V1143.4C838.089 1125.64 812.352 1099.9 794.594 1069H315.511ZM1143.39 1069C1125.64 1099.9 1099.9 1125.64 1068.99 1143.4V1622.48C1353.99 1579.23 1579.23 1353.99 1622.48 1069H1143.39ZM968.994 968C968.812 968 968.695 968.01 968.632 968.017C968.572 968.052 968.444 968.136 968.287 968.293C968.13 968.45 968.046 968.578 968.011 968.638C968.004 968.701 967.994 968.818 967.994 969C967.994 969.181 968.004 969.298 968.011 969.361C968.046 969.421 968.129 969.549 968.287 969.707C968.444 969.864 968.572 969.947 968.632 969.982C968.695 969.99 968.812 970 968.994 970C969.176 970 969.292 969.99 969.355 969.982C969.415 969.947 969.544 969.865 969.701 969.707C969.859 969.55 969.941 969.421 969.977 969.361C969.984 969.298 969.994 969.182 969.994 969C969.994 968.818 969.984 968.7 969.977 968.638C969.941 968.578 969.858 968.45 969.701 968.293C969.543 968.135 969.415 968.052 969.355 968.017C969.292 968.01 969.176 968 968.994 968ZM1068.99 794.602C1099.9 812.359 1125.63 838.094 1143.39 868.995H1622.48C1579.22 584.001 1353.99 358.766 1068.99 315.517V794.602ZM868.994 315.517C583.999 358.766 358.764 584.001 315.512 868.995H794.599C812.357 838.094 838.092 812.359 868.994 794.602V315.517Z" fill="%23D44B4B"/></svg>') 16 16, crosshair !important;
+}
+
+/* Tree wrapper base styling - bevat sway animatie en positionering */
+/* Sway animatie zit op wrapper zodat JS transform op tree geen conflict heeft */
+.tree-wrapper {
+  position: fixed;
+  pointer-events: none;
+  z-index: 2;
+  transform-origin: bottom center; /* Rotatie en schaal vanuit onderkant */
+}
+
+/* Tree layer base styling - GEEN transform hier, alleen visual properties */
+/* JS transities worden toegepast op tree-layer voor scene animaties */
+.tree-layer {
+  width: 100%;
+  height: 100%;
+  transform-origin: bottom center; /* Voor JS scale en translate */
+}
+
+.tree-layer svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* LEFT SIDE TREES — positioned off-screen left, asymmetric distribution */
+/* Positionering en animatie op wrapper, visual properties op tree */
+.tree-wrapper-left-1 { left: -15%; bottom: -10%; width: 40%; animation: tree-sway-left 8s ease-in-out infinite; }
+.tree-wrapper-left-2 { left: 0; bottom: -10%; width: 28%; animation: tree-sway-left 10s ease-in-out infinite 0.5s; }
+.tree-wrapper-left-3 { left: 15%; bottom: -30%; width: 18%; animation: tree-sway-left 12s ease-in-out infinite 1s; }
+
+.tree-left-1 { opacity: 0.65; filter: blur(2px); }
+.tree-left-2 { opacity: 0.42; filter: blur(6px); }
+.tree-left-3 { opacity: 0.3; filter: blur(12px); }
+
+/* RIGHT SIDE TREES — positioned off-screen right, mirrored asymmetry */
+.tree-wrapper-right-1 { right: -15%; bottom: -10%; width: 42%; transform: scaleX(-1); animation: tree-sway-right 8.5s ease-in-out infinite 0.3s; }
+.tree-wrapper-right-2 { right: 5%; bottom: -10%; width: 26%; transform: scaleX(-1); animation: tree-sway-right 11s ease-in-out infinite 0.8s; }
+.tree-wrapper-right-3 { right: 20%; bottom: -30%; width: 16%; transform: scaleX(-1); animation: tree-sway-right 13s ease-in-out infinite 1.2s; }
+
+/* Render initial vector trees (Scene 1-2) as black silhouettes */
+.tree-wrapper-left-1 img,
+.tree-wrapper-right-1 img,
+.tree-wrapper-left-2 img,
+.tree-wrapper-right-2 img,
+.tree-wrapper-left-3 img,
+.tree-wrapper-right-3 img { filter: brightness(0) saturate(0); }
+
+.tree-right-1 { opacity: 0.68; filter: blur(2px); }
+.tree-right-2 { opacity: 0.38; filter: blur(7px); }
+.tree-right-3 { opacity: 0.4; filter: blur(14px); }
+
+/* Bubble title animation */
+.bubble-title {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+.bubble-title-animate {
+  animation: sentence-fade-in 2s ease-out forwards;
+}
+
+/* Sentence fade-in animation */
+.sentence {
+  opacity: 0;
+  display: none; /* Hidden by default - JavaScript will show only current page */
+  transform: translateY(8px);
+}
+
+.sentence-animate {
+  animation: sentence-fade-in 2s ease-out forwards;
+}
+
+@keyframes sentence-fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* BROWN TREES for Scene 3 - Same positioning as regular trees, just inherit */
+.tree-wrapper-brown-left-1 { left: -15%; bottom: -10%; width: 40%; animation: tree-sway-left 8s ease-in-out infinite; }
+.tree-wrapper-brown-left-2 { left: 0; bottom: -10%; width: 28%; animation: tree-sway-left 10s ease-in-out infinite 0.5s; }
+.tree-wrapper-brown-left-3 { left: 15%; bottom: -30%; width: 18%; animation: tree-sway-left 12s ease-in-out infinite 1s; }
+.tree-wrapper-brown-right-1 { right: -15%; bottom: -10%; width: 42%; transform: scaleX(-1); animation: tree-sway-right 8.5s ease-in-out infinite 0.3s; }
+.tree-wrapper-brown-right-2 { right: 5%; bottom: -10%; width: 26%; transform: scaleX(-1); animation: tree-sway-right 11s ease-in-out infinite 0.8s; }
+.tree-wrapper-brown-right-3 { right: 20%; bottom: -30%; width: 16%; transform: scaleX(-1); animation: tree-sway-right 13s ease-in-out infinite 1.2s; }
+
+/* Leaves wrappers (Scene 5 positions mirror brown) */
+.tree-wrapper-leaves-left-1 { left: -15%; bottom: -10%; width: 40%; animation: tree-sway-left 8s ease-in-out infinite; }
+.tree-wrapper-leaves-left-2 { left: 0; bottom: -10%; width: 28%; animation: tree-sway-left 10s ease-in-out infinite 0.5s; }
+.tree-wrapper-leaves-left-3 { left: 15%; bottom: -30%; width: 18%; animation: tree-sway-left 12s ease-in-out infinite 1s; }
+.tree-wrapper-leaves-right-1 { right: -15%; bottom: -10%; width: 42%; transform: scaleX(-1); animation: tree-sway-right 8.5s ease-in-out infinite 0.3s; }
+.tree-wrapper-leaves-right-2 { right: 5%; bottom: -10%; width: 26%; transform: scaleX(-1); animation: tree-sway-right 11s ease-in-out infinite 0.8s; }
+.tree-wrapper-leaves-right-3 { right: 20%; bottom: -30%; width: 16%; transform: scaleX(-1); animation: tree-sway-right 13s ease-in-out infinite 1.2s; }
+
+/* Cherries wrappers (Scene 7 positions mirror brown) */
+.tree-wrapper-cherries-left-1 { left: -15%; bottom: -10%; width: 40%; animation: tree-sway-left 8s ease-in-out infinite; }
+.tree-wrapper-cherries-left-2 { left: 0; bottom: -10%; width: 28%; animation: tree-sway-left 10s ease-in-out infinite 0.5s; }
+.tree-wrapper-cherries-left-3 { left: 15%; bottom: -30%; width: 18%; animation: tree-sway-left 12s ease-in-out infinite 1s; }
+.tree-wrapper-cherries-right-1 { right: -15%; bottom: -10%; width: 42%; transform: scaleX(-1); animation: tree-sway-right 8.5s ease-in-out infinite 0.3s; }
+.tree-wrapper-cherries-right-2 { right: 5%; bottom: -10%; width: 26%; transform: scaleX(-1); animation: tree-sway-right 11s ease-in-out infinite 0.8s; }
+.tree-wrapper-cherries-right-3 { right: 20%; bottom: -30%; width: 16%; transform: scaleX(-1); animation: tree-sway-right 13s ease-in-out infinite 1.2s; }
+
+.tree-brown-left-1 { opacity: 0.65; filter: blur(2px); }
+.tree-brown-left-2 { opacity: 0.42; filter: blur(6px); }
+.tree-brown-left-3 { opacity: 0.3; filter: blur(12px); }
+.tree-brown-right-1 { opacity: 0.68; filter: blur(2px); }
+.tree-brown-right-2 { opacity: 0.38; filter: blur(7px); }
+.tree-brown-right-3 { opacity: 0.4; filter: blur(14px); }
+
+body {
+  margin: 0;
+  overflow: hidden;
+  font-family: "Work Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background-color: #082a2d;
+  color: #F0EAD6;
+  font-weight: 200;
+}
+
+/* Landing Screen */
+.landing-screen {
+  position: fixed;
+  inset: 0;
+  background-color: #082a2d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 1;
+  transition: opacity 1s ease;
+  cursor: default !important;
+}
+
+/* Restart button for end screen */
+.restart-btn {
+  padding: 16px 40px;
+  font-size: 18px;
+  font-weight: 300;
+  color: #F0EAD6;
+  background-color: transparent;
+  border: 2px solid #F0EAD6;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: "Work Sans", sans-serif;
+  letter-spacing: 0.5px;
+}
+
+.restart-btn:hover {
+  background-color: #F0EAD6;
+  color: #082a2d;
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(240, 234, 214, 0.3);
+}
+
+.landing-screen * {
+  cursor: default !important;
+}
+
+.landing-screen.fade-out {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.landing-content {
+  text-align: center;
+  max-width: 600px;
+  padding: 40px;
+}
+
+.landing-title {
+  font-family: "Marcellus", serif;
+  font-size: 64px;
+  margin: 0 0 20px;
+  color: #F0EAD6;
+  font-weight: 400;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.landing-title.animate {
+  animation: landing-fade-in 4s ease-out forwards;
+}
+
+.landing-subtitle {
+  font-size: 24px;
+  margin: 0 0 40px;
+  color: #F0EAD6;
+  font-weight: 300;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.landing-subtitle.animate {
+  animation: landing-fade-in 4s ease-out forwards;
+}
+
+.landing-cta {
+  padding: 16px 32px;
+  font-size: 18px;
+  border: 2px solid #F0EAD6;
+  background: transparent;
+  color: #F0EAD6;
+  border-radius: 8px;
+  cursor: pointer !important;
+  font-family: "Work Sans", sans-serif;
+  font-weight: 400;
+  transition: background 0.3s ease, color 0.3s ease;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.landing-cta.animate {
+  animation: landing-fade-in 4s ease-out forwards;
+}
+
+@keyframes landing-fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 0.9;
+    transform: translateY(0);
+  }
+}
+
+.landing-cta:hover {
+  background: #F0EAD6;
+  color: #082a2d;
+}
+
+.fullscreen-btn {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  padding: 12px;
+  border: 2px solid rgba(240, 234, 214, 0.6);
+  background: rgba(8, 42, 45, 0.4);
+  color: rgba(240, 234, 214, 0.7);
+  border-radius: 8px;
+  cursor: pointer !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  z-index: 1001;
+  pointer-events: auto;
+}
+
+.fullscreen-btn:hover {
+  background: #F0EAD6;
+  color: #082a2d;
+  border-color: #F0EAD6;
+}
+
+.fullscreen-btn svg {
+  display: block;
+}
+
+/* Use Marcellus font for all titles and headings */
+h1, h2, h3, h4, h5, h6,
+.bubble-title {
+  font-family: "Marcellus", serif;
+  font-weight: 400;
+}
+
+/* Hide heavy/animated elements until JS signals the page is ready to avoid white flashes */
+body:not(.js-ready) .fog,
+body:not(.js-ready) .bubble {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* When JS is ready, fade elements into view */
+body.js-ready .fog,
+body.js-ready .bubble {
+  visibility: visible;
+  transition: opacity 420ms ease, visibility 0s linear 0s;
+  opacity: 1;
+}
+
+/* Prevent float/wobble and fog motion until the UI is revealed to avoid small layout shifts */
+body:not(.js-ready) .bubble,
+body:not(.js-ready) .proc-fog {
+  animation-play-state: paused !important;
+}
+
+body.js-ready .bubble,
+body.js-ready .proc-fog {
+  animation-play-state: running !important;
+}
+.scene {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+}
+
+.bubble {
+ position: absolute;
+  width: 140px;
+  height: 140px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-100%, -100%);
+  border-radius: 50%;
+  
+  background: radial-gradient(circle at 30% 30%, 
+      rgba(255, 255, 255, 0.8),
+      rgba(255, 255, 255, 0.1) 40%,
+      rgba(255, 255, 255, 0) 60%);
+
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  
+  backdrop-filter: blur(4px);
+  box-shadow: 
+      inset 0 0 20px rgba(255, 255, 255, 0.3),
+      0 0 15px rgba(255, 255, 255, 0.15);
+      
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-weight: 300;
+  cursor: pointer;
+  animation: float 5s ease-in-out infinite, wobble 3s ease-in-out infinite;
+  /* No transition on base state - expanded class handles transitions */
+}
+
+.bubble { z-index: 10; }
+
+/* Fog layers behind bubbles */
+.fog {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 5;
+}
+
+
+/* If the fog is backed by an inlined SVG, hide procedural layers and the
+   separate foreground fog so the SVG becomes the single source of atmosphere. */
+.fog.fog--svg .proc-fog {
+  display: none !important;
+}
+
+/* Reveal the SVG wrapper when the fog is using it. Keep subtle transitions. */
+.fog.fog--svg .fog-svg-placeholder {
+  opacity: 1;
+  pointer-events: none;
+  transition: opacity 520ms ease, transform 720ms cubic-bezier(.2,.8,.2,1);
+  will-change: opacity, transform;
+}
+
+/* Slight parallax/scale of the SVG during zoom to keep atmosphere alive */
+.scene.scene--zoom .fog.fog--svg .fog-svg-placeholder {
+  transform: translate3d(-2%, 2%, 0) scale(1.02);
+}
+.scene.scene--expanded .fog.fog--svg .fog-svg-placeholder {
+  transform: translate3d(-3%, 3%, 0) scale(1.04);
+  filter: saturate(1.08) blur(0.6px);
+}
+
+/* Fog layer container — allow overflow so edges are naturally cut off at viewport */
+.fog {
+  overflow: hidden;
+  transform-origin: center center;
+}
+
+/* Flying Crow Animation */
+.crow-container {
+  position: fixed;
+  top: 15%;
+  left: -150px;
+  width: 130px;
+  height: 68px;
+  opacity: 0;
+  z-index: 15;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.crow-container.flying {
+  animation: crow-flight 2.5s linear forwards;
+}
+
+@keyframes crow-flight {
+  0% {
+    left: -150px;
+    top: 55%;
+    opacity: 0;
+    transform: scale(3) rotate(-8deg);
+  }
+  10% {
+    opacity: 0.7;
+  }
+  50% {
+    top: 25%;
+    left: 45%;
+    opacity: 0.7;
+    transform: scale(1.75) rotate(-8deg);
+  }
+  90% {
+    opacity: 0.7;
+  }
+  100% {
+    left: 65%;
+    top: -5%;
+    opacity: 0.3;
+    transform: scale(0.5) rotate(-8deg);
+  }
+}
+
+/* Individual fog layers — positioned strategically left/right with immersive overflow */
+.fog .fog-layer {
+  position: absolute;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  will-change: transform, opacity;
+  opacity: var(--fog-opacity, 0.5);
+}
+
+.fog .fog-layer svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* FOG LAYERS - positioned strategically for depth */
+.fog-layer-1 { --fog-opacity: .3; top: -10%; left: -25%; scale: 1; animation: fog-drift-left 30s ease-in-out infinite; }
+.fog-layer-2 { --fog-opacity: 1; top: 15%; right: -20%; left: auto; scale: 1.2; animation: fog-drift-right 18s ease-in-out infinite reverse; }
+.fog-layer-3 { --fog-opacity: .2; top: 45%; left: -15%; scale: 1.8; animation: fog-drift-left 5s ease-in-out infinite; }
+.fog-layer-4 { --fog-opacity: .17; top: 5%; right: -18%; left: auto; scale: .6; animation: fog-drift-right 10s ease-in-out infinite reverse; }
+.fog-layer-5 { --fog-opacity: .27; top: -20%; left: -35%; scale: 1.5; animation: fog-drift-left 25s ease-in-out infinite; }
+
+/* When we zoom into a bubble, scale the fog and shift to reveal hidden edges.
+   Since fog extends off-screen on left/right, the scale + translate reveals
+   the fog that was previously clipped at the edges. */
+.scene.scene--zoom .fog {
+  transform: scale(1.08) translateX(-2%) translateY(1%);
+  transition: transform 0.7s cubic-bezier(.2,.8,.2,1);
+}
+
+/* Procedural fog rules removed — fog is provided by inlined SVGs only. */
+
+/* Iridescent bubble sheen */
+.bubble {
+  position: absolute;
+}
+
+.bubble::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  pointer-events: none;
+  /* soft colored sheen using multiple stops to mimic soap film */
+  background: radial-gradient(circle at 35% 30%, rgba(150,230,220,0.18), rgba(160,200,230,0.12) 30%, rgba(210,160,230,0.07) 55%, rgba(0,0,0,0) 65%);
+  mix-blend-mode: screen;
+  filter: blur(6px) saturate(1.1);
+}
+
+.bubble::after {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(circle at 55% 60%, rgba(60,150,140,0.08), rgba(90,140,180,0.06) 30%, rgba(140,120,200,0.05) 60%, rgba(0,0,0,0) 75%);
+  filter: blur(10px);
+  mix-blend-mode: screen;
+}
+
+.bubble {
+  border: 1.5px solid rgba(255,255,255,0.22);
+}
+
+/* Fog drift animations - shared for atmospheric movement */
+@keyframes drift {
+  0% { transform: translateX(-15%) translateY(0); }
+  50% { transform: translateX(15%) translateY(-6%); }
+  100% { transform: translateX(-15%) translateY(0); }
+}
+
+@keyframes fog-drift-left {
+  0%, 100% { transform: translateX(0) translateY(0) rotate(0deg); }
+  25% { transform: translateX(-8%) translateY(2%) rotate(24deg); }
+  50% { transform: translateX(-16%) translateY(0) rotate(32deg); }
+  75% { transform: translateX(-8%) translateY(-2%) rotate(15deg); }
+}
+
+@keyframes fog-drift-right {
+  0%, 100% { transform: translateX(0) translateY(0); }
+  25% { transform: translateX(8%) translateY(-2%); }
+  50% { transform: translateX(16%) translateY(0); }
+  75% { transform: translateX(8%) translateY(2%); }
+}
+
+.bubble .bubble-label {
+  position: absolute; /* remove from normal flow so it doesn't push content */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: opacity 0.22s ease, transform 0.22s ease;
+  pointer-events: none;
+  text-align: center;
+  white-space: wrap;
+  font-family: "Marcellus", serif;
+  font-weight: 700;
+  font-size: 20px;
+  color: #0a2d30;
+  text-shadow: 0 1px 3px rgba(255, 255, 255, 0.3);
+}
+
+.bubble:hover .bubble-label {
+  opacity: 1;
+}
+
+.bubble.expanded .bubble-label {
+  opacity: 0;
+  transform: translate(-50%, -56%); /* slight shift while fading */
+}
+
+/* Bubble animations */
+@keyframes wobble {
+  0%, 100% { transform: translate(-50%, -50%) translateY(0) scale(1); }
+  25% { transform: translate(-50%, -50%) translateY(-20px) scale(1.1); }
+  50% { transform: translate(-50%, -50%) translateY(0) scale(0.96); }
+  75% { transform: translate(-50%, -50%) translateY(-20px) scale(1.015); }
+}
+
+@keyframes pop {
+  0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+  70% { transform: translate(-50%, -50%) scale(1.3); opacity: 0.6; }
+  100% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+}
+
+.bubble.pop {
+  animation: pop 0.3s ease-out forwards;
+}
+
+/* Expanded state - prepare for transition but don't change values yet */
+.bubble.expanded {
+  position: fixed;
+  animation: none !important;
+  z-index: 140;
+  cursor: default !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Size and position will be set by JS after transition is applied */
+  /* Background stays as original until phase 2 */
+}
+
+/* Pseudo-element for dark background overlay (starts invisible) */
+.bubble.expanded::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  /* Base gradient - will be overridden by scene-specific rules below */
+  background: radial-gradient(circle at 30% 30%, rgba(180,220,190,0.12), rgba(14,40,36,0.7) 45%);
+  box-shadow: 0 12px 40px rgba(2,8,6,0.55);
+  border: 2px solid rgba(14,40,36,0.4);
+  backdrop-filter: blur(8px);
+  opacity: 0;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Scene-specific bubble backgrounds - match scene colors with subtle gradient overlay */
+.scene-2 .bubble.expanded::before {
+  background: radial-gradient(circle at 30% 30%, rgba(180,220,190,0.12), #082a2d 45%);
+  border: 2px solid rgba(8,42,45,0.6);
+}
+
+.scene-3 .bubble.expanded::before {
+  background: radial-gradient(circle at 30% 30%, rgba(180,220,190,0.12), #0f4045 45%);
+  border: 2px solid rgba(15,64,69,0.6);
+}
+
+.scene-4 .bubble.expanded::before {
+  background: radial-gradient(circle at 30% 30%, rgba(180,220,190,0.12), #0f4045 45%);
+  border: 2px solid rgba(15,64,69,0.6);
+}
+
+.scene-5 .bubble.expanded::before {
+  background: radial-gradient(circle at 30% 30%, rgba(180,220,190,0.12), #156570 45%);
+  border: 2px solid rgba(21,101,112,0.6);
+}
+
+.scene-6 .bubble.expanded::before {
+  background: radial-gradient(circle at 30% 30%, rgba(180,220,190,0.12), #156570 45%);
+  border: 2px solid rgba(21,101,112,0.6);
+}
+
+.scene-7 .bubble.expanded::before {
+  background: radial-gradient(circle at 30% 30%, rgba(180,220,190,0.12), #1e7c8a 45%);
+  border: 2px solid rgba(30,124,138,0.6);
+}
+
+.scene-8 .bubble.expanded::before {
+  background: radial-gradient(circle at 30% 30%, rgba(180,220,190,0.12), #1e7c8a 45%);
+  border: 2px solid rgba(30,124,138,0.6);
+}
+
+.scene-9 .bubble.expanded::before {
+  background: radial-gradient(circle at 30% 30%, rgba(180,220,190,0.12), #4da8b8 45%);
+  border: 2px solid rgba(77,168,184,0.6);
+}
+
+/* Phase 1: Size and position transition properties only */
+.bubble.expanded.bubble-size-transition {
+  transition: top 1.2s cubic-bezier(0.16, 1, 0.3, 1),
+              left 1.2s cubic-bezier(0.16, 1, 0.3, 1),
+              width 1.2s cubic-bezier(0.16, 1, 0.3, 1),
+              height 1.2s cubic-bezier(0.16, 1, 0.3, 1),
+              border-radius 1.2s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Phase 1 target state: the actual size/position values */
+.bubble.expanded.bubble-size-apply {
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  width: var(--dynamic-bubble-size, 520px) !important;
+  height: var(--dynamic-bubble-size, 520px) !important;
+  border-radius: 50% !important;
+}
+
+/* Phase 2 setup: Define transition on the pseudo-element overlay AND bubble background */
+.bubble.expanded.bubble-background-transition::before {
+  transition: opacity 1.5s ease-out;
+}
+
+.bubble.expanded.bubble-background-transition {
+  transition: background 1.5s ease-out;
+}
+
+/* Phase 2 apply: Fade in the dark overlay AND fade out original background */
+.bubble.expanded.bubble-background-apply::before {
+  opacity: 1 !important;
+}
+
+.bubble.expanded.bubble-background-apply {
+  background: transparent !important;
+}
+
+.bubble.expanded *,
+.bubble.expanded .bubble-content,
+.bubble.expanded .bubble-content * {
+  cursor: default !important;
+}
+
+.bubble .bubble-content {
+  opacity: 0;
+  width: 100%;
+  max-width: 480px;
+  max-height: 500px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 18px;
+  box-sizing: border-box;
+  color: #F0EAD6;
+  text-align: center;
+  transform: scale(0.92);
+  pointer-events: none;
+}
+
+/* Scene 1 bubble has no max-height restriction and centered alignment (uses scale instead) */
+#test-bubble .bubble-content {
+  max-height: none;
+  justify-content: center;
+  padding-top: 18px;
+}
+
+/* All bubbles with progressive content reveal need centered alignment and reduced padding */
+.bubble-orbit-beta .bubble-content,
+.bubble-orbit-gamma .bubble-content,
+.bubble-delta .bubble-content,
+.bubble-epsilon .bubble-content,
+.bubble-zeta .bubble-content,
+.bubble-theta .bubble-content,
+.bubble-iota .bubble-content {
+  justify-content: center;
+  padding-top: 18px;
+}
+
+.bubble.expanded .bubble-content {
+  /* Content stays hidden until show-content class is added */
+  opacity: 0;
+  transform: scale(0.92);
+}
+
+/* Phase 3: Content fade-in */
+.bubble.expanded.bubble-show-content .bubble-content {
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 1.2s ease-out, transform 1.2s ease-out;
+  pointer-events: auto;
+}
+
+/* Close button styling removed (linear flow uses CTA only) */
+
+
+@keyframes float {
+  0%, 100% { transform: translate(-50%, -50%) translateX(0) translateY(0) scale(1); }
+  25% { transform: translate(-50%, -50%) translateX(8px) translateY(-20px) scale(1.015); }
+  50% { transform: translate(-50%, -50%) translateX(0) translateY(-35px) scale(1.03); }
+  75% { transform: translate(-50%, -50%) translateX(-8px) translateY(-20px) scale(1.015); }
+}
+
+/* Scene 4: Epsilon bubble animations */
+@keyframes epsilon-wobble {
+  0%, 100% { transform: translate(-50%, -50%) translateX(0) translateY(0) scale(1) rotate(0deg); }
+  15% { transform: translate(-50%, -50%) translateX(-25px) translateY(-30px) scale(1.15) rotate(-3deg); }
+  30% { transform: translate(-50%, -50%) translateX(30px) translateY(-15px) scale(0.92) rotate(4deg); }
+  45% { transform: translate(-50%, -50%) translateX(-15px) translateY(-40px) scale(1.22) rotate(-2deg); }
+  60% { transform: translate(-50%, -50%) translateX(20px) translateY(-10px) scale(0.88) rotate(5deg); }
+  75% { transform: translate(-50%, -50%) translateX(-30px) translateY(-35px) scale(1.18) rotate(-4deg); }
+  90% { transform: translate(-50%, -50%) translateX(15px) translateY(-20px) scale(0.95) rotate(2deg); }
+}
+
+@keyframes epsilon-pulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  50% { transform: translate(-50%, -50%) scale(1.08); }
+}
+
+/* Delta: Continuous chase movement that leaves and re-enters viewport */
+@keyframes delta-chase {
+  0%   { top: 35%; left: 35%; transform: translate(-50%, -50%) scale(1); }
+  8%   { top: 20%; left: 50%; transform: translate(-50%, -50%) scale(1.1); }
+  16%  { top: 10%; left: 70%; transform: translate(-50%, -50%) scale(0.9); }
+  24%  { top: -5%; left: 85%; transform: translate(-50%, -50%) scale(1.15); }
+  32%  { top: -10%; left: 95%; transform: translate(-50%, -50%) scale(0.85); }
+  40%  { top: 15%; left: 110%; transform: translate(-50%, -50%) scale(1.2); }
+  48%  { top: 40%; left: 105%; transform: translate(-50%, -50%) scale(0.95); }
+  56%  { top: 70%; left: 90%; transform: translate(-50%, -50%) scale(1.05); }
+  64%  { top: 90%; left: 70%; transform: translate(-50%, -50%) scale(0.9); }
+  72%  { top: 105%; left: 50%; transform: translate(-50%, -50%) scale(1.15); }
+  80%  { top: 95%; left: 20%; transform: translate(-50%, -50%) scale(0.95); }
+  88%  { top: 70%; left: 5%; transform: translate(-50%, -50%) scale(1.1); }
+  96%  { top: 45%; left: 15%; transform: translate(-50%, -50%) scale(0.95); }
+  100% { top: 35%; left: 35%; transform: translate(-50%, -50%) scale(1); }
+}
+
+/* Scene 2: Three bubbles orbit with staggered motion */
+@keyframes orbit-alpha {
+  0%, 100% { transform: translate(-50%, -50%) translateX(0) translateY(0) scale(2); }
+  25% { transform: translate(-50%, -50%) translateX(12px) translateY(-15px) scale(2.02); }
+  50% { transform: translate(-50%, -50%) translateX(20px) translateY(-25px) scale(2.03); }
+  75% { transform: translate(-50%, -50%) translateX(8px) translateY(-18px) scale(2.02); }
+}
+
+@keyframes orbit-beta {
+  0%, 100% { transform: translate(-50%, -50%) translateX(0) translateY(0) scale(1.5); }
+  33% { transform: translate(-50%, -50%) translateX(-15px) translateY(-28px) scale(1.525); }
+  66% { transform: translate(-50%, -50%) translateX(-22px) translateY(-12px) scale(1.52); }
+}
+
+@keyframes orbit-gamma {
+  0%, 100% { transform: translate(-50%, -50%) translateX(0) translateY(0) scale(1); }
+  40% { transform: translate(-50%, -50%) translateX(-10px) translateY(15px) scale(1.015); }
+  70% { transform: translate(-50%, -50%) translateX(18px) translateY(22px) scale(1.025); }
+}
+
+.bubble-orbit-alpha {
+  animation: orbit-alpha 7s ease-in-out infinite !important;
+}
+
+.bubble-orbit-beta {
+  animation: orbit-beta 8.5s ease-in-out infinite 0.5s !important;
+}
+
+.bubble-orbit-gamma {
+  animation: orbit-gamma 9.2s ease-in-out infinite 1s !important;
+}
+
+/* Epsilon bubble - 2x normal size */
+.bubble-epsilon {
+  width: 280px !important;
+  height: 280px !important;
+}
+
+/* Profile bubble for Paul Blok */
+.profile-bubble {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  top: -50px;
+  left: -120px;
+  opacity: 0;
+  z-index: 150;
+  pointer-events: none;
+  
+  /* Photo background behind bubble effect */
+  background-image: url('../assets/img/PaulBlok.png');
+  background-size: cover;
+  background-position: center;
+}
+
+/* Bubble styling overlay */
+.profile-bubble::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, 
+      rgba(255, 255, 255, 0.8),
+      rgba(255, 255, 255, 0.1) 40%,
+      rgba(255, 255, 255, 0) 60%);
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 
+      inset 0 0 20px rgba(255, 255, 255, 0.3),
+      0 0 15px rgba(255, 255, 255, 0.15);
+  z-index: 2;
+}
+
+/* Iridescent sheen for profile bubble */
+.profile-bubble::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(circle at 35% 30%, rgba(150,230,220,0.18), rgba(160,200,230,0.12) 30%, rgba(210,160,230,0.07) 55%, rgba(0,0,0,0) 65%);
+  mix-blend-mode: screen;
+  filter: blur(6px) saturate(1.1);
+  z-index: 3;
+}
+
+/* Slide in from left animation */
+@keyframes profile-slide-in {
+  0% {
+    left: -200px;
+    opacity: 0;
+  }
+  100% {
+    left: -60px;
+    opacity: 1;
+  }
+}
+
+/* Floating animation */
+@keyframes profile-float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+/* Show profile bubble when epsilon is expanded */
+.bubble-epsilon.expanded .profile-bubble {
+  animation: profile-slide-in 0.8s ease-out 0.5s forwards, profile-float 4s ease-in-out 1.3s infinite;
+}
+
+/* Show profile bubble when zeta is expanded */
+.bubble-zeta.expanded .profile-bubble {
+  animation: profile-slide-in 0.8s ease-out 0.5s forwards, profile-float 4s ease-in-out 1.3s infinite;
+}
+
+/* Profile bubble for Tobias (right side variant) */
+.profile-bubble-right {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  top: -50px;
+  right: -120px;
+  opacity: 0;
+  z-index: 150;
+  pointer-events: none;
+  
+  /* Photo background behind bubble effect */
+  background-image: url('../assets/img/Tobias.png');
+  background-size: cover;
+  background-position: center;
+}
+
+/* Bubble styling overlay for right profile */
+.profile-bubble-right::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, 
+      rgba(255, 255, 255, 0.8),
+      rgba(255, 255, 255, 0.1) 40%,
+      rgba(255, 255, 255, 0) 60%);
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 
+      inset 0 0 20px rgba(255, 255, 255, 0.3),
+      0 0 15px rgba(255, 255, 255, 0.15);
+  z-index: 2;
+}
+
+/* Iridescent sheen for right profile bubble */
+.profile-bubble-right::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(circle at 35% 30%, rgba(150,230,220,0.18), rgba(160,200,230,0.12) 30%, rgba(210,160,230,0.07) 55%, rgba(0,0,0,0) 65%);
+  mix-blend-mode: screen;
+  filter: blur(6px) saturate(1.1);
+  z-index: 3;
+}
+
+/* Slide in from right animation */
+@keyframes profile-slide-in-right {
+  0% {
+    right: -200px;
+    opacity: 0;
+  }
+  100% {
+    right: -60px;
+    opacity: 1;
+  }
+}
+
+/* Show profile bubble when tobias is expanded */
+.bubble-tobias.expanded .profile-bubble-right {
+  animation: profile-slide-in-right 0.8s ease-out 0.5s forwards, profile-float 4s ease-in-out 1.3s infinite;
+}
+
+/* Profile bubble for Rawaz (bottom-left variant) */
+.profile-bubble-bottom-left {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  bottom: -120px;
+  left: -50px;
+  opacity: 0;
+  z-index: 150;
+  pointer-events: none;
+  
+  /* Photo background behind bubble effect */
+  background-image: url('../assets/img/Rawaz.png');
+  background-size: cover;
+  background-position: center;
+}
+
+/* Bubble styling overlay for bottom-left profile */
+.profile-bubble-bottom-left::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, 
+      rgba(255, 255, 255, 0.8),
+      rgba(255, 255, 255, 0.1) 40%,
+      rgba(255, 255, 255, 0) 60%);
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 
+      inset 0 0 20px rgba(255, 255, 255, 0.3),
+      0 0 15px rgba(255, 255, 255, 0.15);
+  z-index: 2;
+}
+
+/* Iridescent sheen for bottom-left profile bubble */
+.profile-bubble-bottom-left::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(circle at 35% 30%, rgba(150,230,220,0.18), rgba(160,200,230,0.12) 30%, rgba(210,160,230,0.07) 55%, rgba(0,0,0,0) 65%);
+  mix-blend-mode: screen;
+  filter: blur(6px) saturate(1.1);
+  z-index: 3;
+}
+
+/* Slide in from bottom animation */
+@keyframes profile-slide-in-bottom {
+  0% {
+    bottom: -200px;
+    opacity: 0;
+  }
+  100% {
+    bottom: -60px;
+    opacity: 1;
+  }
+}
+
+/* Show profile bubble when lambda is expanded */
+.bubble-lambda.expanded .profile-bubble-bottom-left {
+  animation: profile-slide-in-bottom 0.8s ease-out 0.5s forwards, profile-float 4s ease-in-out 1.3s infinite;
+}
+
+/* Inner card used inside the round expanded bubble for legibility */
+.bubble .bubble-inner-card {
+  width: 100%;
+  max-width: 520px;
+  padding: 18px;
+  border-radius: 12px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-sizing: border-box;
+  opacity: 0;
+  pointer-events: none;
+  /* No transition here - phase 3 handles it */
+}
+
+/* Phase 3: Content appears after background transition */
+.bubble.expanded.bubble-show-content .bubble-inner-card {
+  opacity: 1 !important;
+  pointer-events: auto;
+  transition: opacity 1.2s ease-out;
+}
+
+/* Scene 1 bubble - larger expanded size */
+#test-bubble.expanded {
+  width: 800px !important; /* 420px * 1.6 */
+  height: 800px !important;
+}
+
+/* Scene 1 bubble content - scaled to match */
+#test-bubble .bubble-inner-card {
+  transform: translate(-50%, -50%) scale(1.6);
+}
+
+/* ============================================
+   SCENE TRANSITION SYSTEM
+   ============================================ */
+
+/* Scene base states */
+.scene {
+  transition: background-color 2s ease;
+}
+
+/* Scene 2: Default dark forest atmosphere */
+body:has(.scene-2) .scene,
+.scene.scene-2 {
+  background-color: #082a2d;
+}
+
+/* Scene 3: Lighter, more visible atmosphere */
+body:has(.scene-3) .scene,
+.scene.scene-3 {
+  background-color: #0f4045;
+}
+
+/* Transition state: Scene 2 → Scene 3 */
+.scene.transitioning-2-3 {
+  background-color: #0f4045; /* Target Scene 3 color */
+}
+
+/* Fog fade during transitions - JavaScript handles gradual opacity reduction */
+/* Tree animations handled entirely by JavaScript */
+/* CSS only provides styling, not transforms */
+
+/* CTA style - consistent with landing screen */
+.bubble .cta {
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: 2px solid #F0EAD6;
+  background: #082a2d;
+  color: #F0EAD6;
+  cursor: pointer !important;
+  font-size: 14px;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.bubble .cta:hover {
+  background: #F0EAD6;
+  color: #082a2d;
+}
+
+/* Scene 3 CTA styling */
+#scene3-cta {
+  padding: 10px 20px !important;
+  border-radius: 8px !important;
+  border: 2px solid #F0EAD6 !important;
+  background: #082a2d !important;
+  color: #F0EAD6 !important;
+  cursor: pointer !important;
+  font-size: 16px !important;
+  transition: background 0.3s ease, color 0.3s ease !important;
+}
+
+#scene3-cta:hover {
+  background: #0f3d40 !important;
+}
+
+/* Keep everything readable when motion is reduced */
+@media (prefers-reduced-motion: reduce) {
+  .scene.scene--zoom .fog,
+  .scene.scene--zoom .fog-foreground {
+    transition: none;
+    transform: none;
+  }
+  .bubble {
+    transition: none;
+    animation: none;
+  }
+}
+
+/* Subtle sway animations for tree wrappers — lightweight for performance */
+/* Sway animatie zit op wrapper zodat JS transform op tree geen conflict heeft */
+@keyframes tree-sway-left {
+  0% { transform: rotate(-2deg); }
+  50% { transform: rotate(2deg); }
+  100% { transform: rotate(-2deg); }
+}
+
+/* Right sway heeft geen scaleX, die zit al op wrapper */
+@keyframes tree-sway-right {
+  0% { transform: scaleX(-1) rotate(-2deg); }
+  50% { transform: scaleX(-1) rotate(2deg); }
+  100% { transform: scaleX(-1) rotate(-2deg); }
+}
+
+/* ============================================
+   NEW BUBBLE ANIMATIONS - SCENE 4, 6, 8
+   ============================================ */
+
+/* Scene 4: Zeta bubble - spiral motion */
+@keyframes zeta-spiral {
+  0% { transform: translate(-50%, -50%) rotate(0deg) translateX(0) scale(1); }
+  25% { transform: translate(-50%, -50%) rotate(90deg) translateX(40px) scale(1.1); }
+  50% { transform: translate(-50%, -50%) rotate(180deg) translateX(0) scale(0.95); }
+  75% { transform: translate(-50%, -50%) rotate(270deg) translateX(40px) scale(1.05); }
+  100% { transform: translate(-50%, -50%) rotate(360deg) translateX(0) scale(1); }
+}
+
+.bubble-zeta {
+  animation: zeta-spiral 12s ease-in-out infinite !important;
+}
+
+/* Scene 6: Five unique bubble animations */
+
+/* Eta (Joey) - rectangular stepping pattern with wobble, no rotation */
+@keyframes eta-rectangular-step {
+  0% { transform: translate(-50%, -50%) translateX(0) translateY(0) scale(1); }
+  12.5% { transform: translate(-50%, -50%) translateX(-300px) translateY(0) scale(1.05); }
+  25% { transform: translate(-50%, -50%) translateX(-300px) translateY(300px) scale(0.98); }
+  37.5% { transform: translate(-50%, -50%) translateX(0) translateY(300px) scale(1.08); }
+  50% { transform: translate(-50%, -50%) translateX(0) translateY(600px) scale(0.95); }
+  62.5% { transform: translate(-50%, -50%) translateX(300px) translateY(600px) scale(1.12); }
+  75% { transform: translate(-50%, -50%) translateX(300px) translateY(300px) scale(0.92); }
+  87.5% { transform: translate(-50%, -50%) translateX(300px) translateY(0) scale(1.06); }
+  100% { transform: translate(-50%, -50%) translateX(0) translateY(0) scale(1); }
+}
+
+.bubble-eta {
+  animation: eta-rectangular-step 16s linear infinite !important;
+}
+
+/* Theta (Kathleen) - gentle floating orbit like Delta */
+@keyframes theta-float-orbit {
+  0%, 100% { transform: translate(-50%, -50%) translateX(0) translateY(0) scale(1); }
+  25% { transform: translate(-50%, -50%) translateX(10px) translateY(-25px) scale(1.02); }
+  50% { transform: translate(-50%, -50%) translateX(0) translateY(-40px) scale(1.04); }
+  75% { transform: translate(-50%, -50%) translateX(-10px) translateY(-25px) scale(1.02); }
+}
+
+.bubble-theta {
+  animation: theta-float-orbit 10s ease-in-out infinite !important;
+}
+
+/* Iota (Marieke) - rising from below viewport with gentle sway */
+@keyframes iota-rise-from-bottom {
+  0% { transform: translate(-50%, -50%) translateX(0) translateY(0) scale(1); }
+  25% { transform: translate(-50%, -50%) translateX(-15px) translateY(-250px) scale(1.05); }
+  50% { transform: translate(-50%, -50%) translateX(0) translateY(-500px) scale(0.98); }
+  75% { transform: translate(-50%, -50%) translateX(15px) translateY(-750px) scale(1.03); }
+  100% { transform: translate(-50%, -50%) translateX(0) translateY(-1000px) scale(1); }
+}
+
+.bubble-iota {
+  animation: iota-rise-from-bottom 14s ease-in-out infinite alternate !important;
+}
+
+/* Kappa (Rron) - 5x larger with wobble and bottom-right corner clip */
+@keyframes kappa-large-wobble {
+  0%, 100% { transform: translate(-50%, -50%) translateY(0) scale(5); }
+  25% { transform: translate(-50%, -50%) translateY(-20px) scale(5.25); }
+  50% { transform: translate(-50%, -50%) translateY(0) scale(4.8); }
+  75% { transform: translate(-50%, -50%) translateY(-20px) scale(5.13); }
+}
+
+.bubble-kappa {
+  animation: kappa-large-wobble 10s ease-in-out infinite !important;
+}
+
+/* Lambda (Rawaz) - bounce with squeeze effect (o0o0o0 pattern), 2x larger */
+@keyframes lambda-bounce-squeeze {
+  0%, 100% { transform: translate(-50%, -50%) scaleX(2) scaleY(2); }
+  12.5% { transform: translate(-50%, -50%) scaleX(1.7) scaleY(2.5); }
+  25% { transform: translate(-50%, -50%) scaleX(2.3) scaleY(1.6); }
+  37.5% { transform: translate(-50%, -50%) scaleX(1.8) scaleY(2.4); }
+  50% { transform: translate(-50%, -50%) scaleX(2.4) scaleY(1.7); }
+  62.5% { transform: translate(-50%, -50%) scaleX(1.76) scaleY(2.36); }
+  75% { transform: translate(-50%, -50%) scaleX(2.36) scaleY(1.76); }
+  87.5% { transform: translate(-50%, -50%) scaleX(1.84) scaleY(2.24); }
+}
+
+.bubble-lambda {
+  animation: lambda-bounce-squeeze 8s ease-in-out infinite !important;
+}
+
+/* Scene 8: Three creative bubble animations */
+
+/* Mu - spin and scale with position shift */
+@keyframes mu-spin-shift {
+  0%, 100% { transform: translate(-50%, -50%) rotate(0deg) scale(1) translateX(0); }
+  20% { transform: translate(-50%, -50%) rotate(144deg) scale(1.3) translateX(50px); }
+  40% { transform: translate(-50%, -50%) rotate(288deg) scale(0.8) translateX(-30px); }
+  60% { transform: translate(-50%, -50%) rotate(432deg) scale(1.25) translateX(40px); }
+  80% { transform: translate(-50%, -50%) rotate(576deg) scale(0.85) translateX(-40px); }
+}
+
+.bubble-mu {
+  animation: mu-spin-shift 20s ease-in-out infinite !important;
+}
+
+/* Nu - complex wave pattern */
+@keyframes nu-wave-complex {
+  0%, 100% { transform: translate(-50%, -50%) translateX(0) translateY(0) rotate(0deg) scale(1); }
+  10% { transform: translate(-50%, -50%) translateX(45px) translateY(-35px) rotate(18deg) scale(1.2); }
+  20% { transform: translate(-50%, -50%) translateX(60px) translateY(0) rotate(36deg) scale(0.85); }
+  30% { transform: translate(-50%, -50%) translateX(45px) translateY(35px) rotate(54deg) scale(1.25); }
+  40% { transform: translate(-50%, -50%) translateX(0) translateY(50px) rotate(72deg) scale(0.9); }
+  50% { transform: translate(-50%, -50%) translateX(-45px) translateY(35px) rotate(90deg) scale(1.18); }
+  60% { transform: translate(-50%, -50%) translateX(-60px) translateY(0) rotate(108deg) scale(0.88); }
+  70% { transform: translate(-50%, -50%) translateX(-45px) translateY(-35px) rotate(126deg) scale(1.22); }
+  80% { transform: translate(-50%, -50%) translateX(0) translateY(-50px) rotate(144deg) scale(0.92); }
+  90% { transform: translate(-50%, -50%) translateX(30px) translateY(-25px) rotate(162deg) scale(1.1); }
+}
+
+.bubble-nu {
+  animation: nu-wave-complex 24s ease-in-out infinite !important;
+}
+
+/* Xi - elastic bounce */
+@keyframes xi-elastic {
+  0%, 100% { transform: translate(-50%, -50%) scale(1) translateY(0); }
+  10% { transform: translate(-50%, -50%) scale(1.3, 0.7) translateY(-50px); }
+  20% { transform: translate(-50%, -50%) scale(0.8, 1.2) translateY(0); }
+  30% { transform: translate(-50%, -50%) scale(1.2, 0.8) translateY(-30px); }
+  40% { transform: translate(-50%, -50%) scale(0.9, 1.1) translateY(0); }
+  50% { transform: translate(-50%, -50%) scale(1.1, 0.9) translateY(-15px); }
+  60% { transform: translate(-50%, -50%) scale(0.95, 1.05) translateY(0); }
+  70% { transform: translate(-50%, -50%) scale(1.05, 0.95) translateY(-8px); }
+  80% { transform: translate(-50%, -50%) scale(0.98, 1.02) translateY(0); }
+  90% { transform: translate(-50%, -50%) scale(1.02, 0.98) translateY(-4px); }
+}
+
+.bubble-xi {
+  animation: xi-elastic 15s ease-in-out infinite !important;
+}
+
+/* Scene 8: Tobias bubble - playful spiral bounce entrance and ongoing animation */
+@keyframes tobias-spiral-bounce {
+  0% { transform: translate(-50%, -50%) rotate(0deg) translateX(0) translateY(0) scale(1); }
+  7% { transform: translate(-50%, -50%) rotate(72deg) translateX(150px) translateY(-120px) scale(1.4); }
+  14% { transform: translate(-50%, -50%) rotate(144deg) translateX(180px) translateY(-40px) scale(0.7); }
+  21% { transform: translate(-50%, -50%) rotate(216deg) translateX(140px) translateY(100px) scale(1.5); }
+  28% { transform: translate(-50%, -50%) rotate(288deg) translateX(40px) translateY(140px) scale(0.65); }
+  35% { transform: translate(-50%, -50%) rotate(360deg) translateX(-80px) translateY(130px) scale(1.35); }
+  42% { transform: translate(-50%, -50%) rotate(432deg) translateX(-160px) translateY(80px) scale(0.75); }
+  50% { transform: translate(-50%, -50%) rotate(540deg) translateX(-190px) translateY(-20px) scale(1.6); }
+  57% { transform: translate(-50%, -50%) rotate(612deg) translateX(-150px) translateY(-110px) scale(0.8); }
+  64% { transform: translate(-50%, -50%) rotate(684deg) translateX(-60px) translateY(-150px) scale(1.45); }
+  71% { transform: translate(-50%, -50%) rotate(756deg) translateX(60px) translateY(-160px) scale(0.7); }
+  78% { transform: translate(-50%, -50%) rotate(828deg) translateX(140px) translateY(-100px) scale(1.3); }
+  85% { transform: translate(-50%, -50%) rotate(900deg) translateX(170px) translateY(-30px) scale(0.85); }
+  92% { transform: translate(-50%, -50%) rotate(972deg) translateX(100px) translateY(60px) scale(1.25); }
+  100% { transform: translate(-50%, -50%) rotate(1080deg) translateX(0) translateY(0) scale(1); }
+}
+
+.bubble-tobias {
+  animation: tobias-spiral-bounce 14s linear infinite !important;
+}
+
+/* Scene background colors - gradual lightening */
+.scene.scene-3,
+body:has(.scene-3) .scene {
+  background-color: #0f4045 !important;
+}
+
+.scene.scene-4,
+body:has(.scene-4) .scene {
+  background-color: #0f4045 !important;
+}
+
+.scene.scene-5,
+body:has(.scene-5) .scene {
+  background-color: #156570 !important;
+}
+
+.scene.scene-6,
+body:has(.scene-6) .scene {
+  background-color: #156570 !important;
+}
+
+.scene.scene-7,
+body:has(.scene-7) .scene {
+  background-color: #1e7c8a !important;
+}
+
+.scene.scene-8,
+body:has(.scene-8) .scene {
+  background-color: #1e7c8a !important;
+}
+
+.scene.scene-9,
+body:has(.scene-9) .scene {
+  background-color: #4da8b8 !important;
+}
+
+/* Scene 5 and 7 CTA styling */
+#scene5-cta,
+#scene7-cta {
+  padding: 12px 28px !important;
+  border-radius: 8px !important;
+  border: 2px solid #F0EAD6 !important;
+  background: #082a2d !important;
+  color: #F0EAD6 !important;
+  cursor: pointer !important;
+  font-size: 18px !important;
+  transition: background 0.3s ease, color 0.3s ease !important;
+}
+
+#scene5-cta:hover,
+#scene7-cta:hover {
+  background: #0f3d40 !important;
+}
