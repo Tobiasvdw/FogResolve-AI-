@@ -215,11 +215,11 @@ class AudioManager {
       this.introAudio.currentTime = 0;
     }
     
-    this.introAudio = new Audio('assets/audio/intro.mp3');
+    this.introAudio = new Audio('assets/audio/Intro.mp3');
     this.introAudio.volume = 0.5;
     this.introAudio.loop = false;
     this.introAudio.play().catch(e => console.log('Intro audio play failed:', e));
-    console.log('[AUDIO] Started playing intro.mp3');
+    console.log('[AUDIO] Started playing Intro.mp3');
   }
 
   // Stop intro audio
@@ -228,7 +228,7 @@ class AudioManager {
       this.introAudio.pause();
       this.introAudio.currentTime = 0;
       this.introAudio = null;
-      console.log('[AUDIO] Stopped intro.mp3');
+      console.log('[AUDIO] Stopped Intro.mp3');
     }
   }
 
