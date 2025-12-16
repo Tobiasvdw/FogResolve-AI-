@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>De:Fog</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Marcellus&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <script src="js/blossomRain.js" defer></script>
+</head>
+
+<body>
+    <!-- Landing Screen -->
+    <div class="landing-screen" id="landing-screen">
+        <div class="landing-content">
+            <h1 class="landing-title">FogResolve(AI)</h1>
+            <p class="landing-subtitle">Inzichten van anderen. Helderheid voor jou.</p>
+            <button class="landing-cta" id="landing-cta">Start ervaring</button>
+        </div>
+    </div>
+
+    <!-- Persistent Fullscreen Button -->
+    <button class="fullscreen-btn" id="fullscreen-btn" title="Volledig scherm">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" />
+        </svg>
+    </button>
+
+    <div class="scene" id="fog-scene">
+        <!-- Flying Crow -->
+        <div class="crow-container" id="crow-container">
+            <svg width="130" height="68" viewBox="0 0 2607 1365" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g filter="url(#filter0_f_24_2)">
+                    <path d="M1439.5 400L400 456L1042.5 965L2207 926L1439.5 400Z" fill="black"/>
+                </g>
+                <defs>
+                    <filter id="filter0_f_24_2" x="0" y="0" width="2607" height="1365" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                        <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+                        <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+                        <feGaussianBlur stdDeviation="200" result="effect1_foregroundBlur_24_2"/>
+                    </filter>
+                </defs>
+            </svg>
+        </div>
+
+        <div class="fog" aria-hidden="true">
+            <!-- Five fog layers positioned strategically left/right for atmospheric depth -->
+            <!-- Layer 1: Far Left (front fog) -->
+            <div class="fog-layer fog-layer-1" aria-hidden="true">
+                <svg width="2301" height="1556" viewBox="0 0 2301 1556" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <g filter="url(#filter0_f_1_10)">
+                        <path d="M393 569.5L300 893L794 1255.5L1474 986H2001L1552 300L944 569.5H393Z" fill="#B3D1BD" />
+                    </g>
+                    <defs>
+                        <filter id="filter0_f_1_10" x="0" y="0" width="2301" height="1555.5"
+                            filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                            <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                            <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
+                            <feGaussianBlur stdDeviation="150" result="effect1_foregroundBlur_1_10" />
+                        </filter>
+                    </defs>
+                </svg>
+            </div>
+
+            <!-- Layer 2: Right Side (back fog, softer blur) -->
+            <div class="fog-layer fog-layer-2" aria-hidden="true">
+                <svg width="2901" height="2390" viewBox="0 0 2901 2390" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <g filter="url(#filter0_f_3_11)">
+                        <path d="M1027.5 673L600 1193L1544 1789.5L1823.5 1113L2301 1286L1852 600L1203 1193L1027.5 673Z"
+                            fill="#B3D1BD" />
+                    </g>
+                    <defs>
+                        <filter id="filter0_f_3_11" x="0" y="0" width="2901" height="2389.5"
+                            filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                            <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                            <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
+                            <feGaussianBlur stdDeviation="300" result="effect1_foregroundBlur_3_11" />
+                        </filter>
+                    </defs>
+                </svg>
+            </div>
+
+            <!-- Layer 3: Slightly Left (background, very soft) -->
+            <div class="fog-layer fog-layer-3" aria-hidden="true">
+                <svg width="3512" height="3676" viewBox="0 0 3512 3676" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <g filter="url(#filter0_f_3_12)">
+                        <path
+                            d="M2812 2447.5L1442.5 1305H2544.5L1994 700H1134.5L700 1019.5L1027.5 1518L748 1898L2262 2975.5L1414 1818L2812 2447.5Z"
+                            fill="#B3D1BD" />
+                    </g>
+                    <defs>
+                        <filter id="filter0_f_3_12" x="0" y="0" width="3512" height="3675.5"
+                            filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                            <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                            <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
+                            <feGaussianBlur stdDeviation="350" result="effect1_foregroundBlur_3_12" />
+                        </filter>
+                    </defs>
+                </svg>
+            </div>
+
+            <!-- Layer 4: Slightly Right (mid-background) -->
+            <div class="fog-layer fog-layer-4" aria-hidden="true">
+                <svg width="3044" height="3475" viewBox="0 0 3044 3475" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <g filter="url(#filter0_f_3_13)">
+                        <path
+                            d="M1858.82 2974.62L1257.94 1295.4L878.369 2329.97L500 1604.77L796.042 797.866L1245.65 500L1600.84 979.161L2053.86 847.649L2543.95 2640.14L1749.36 1445.34L1858.82 2974.62Z"
+                            fill="#B3D1BD" />
+                    </g>
+                    <defs>
+                        <filter id="filter0_f_3_13" x="0" y="0" width="3043.95" height="3474.62"
+                            filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                            <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                            <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
+                            <feGaussianBlur stdDeviation="250" result="effect1_foregroundBlur_3_13" />
+                        </filter>
+                    </defs>
+                </svg>
+            </div>
+
+            <!-- Layer 5: Far Left-Upper (very soft background, lowest opacity) -->
+            <div class="fog-layer fog-layer-5" aria-hidden="true">
+                <svg width="5401" height="3910" viewBox="0 0 5401 3910" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <g filter="url(#filter0_f_6_2)">
+                        <path
+                            d="M1185.95 1538.72L1000 2185.38L1987.71 2910L3347.31 2371.28H4401L3503.26 1000L2287.62 1538.72H1185.95Z"
+                            fill="#B3D1BD" />
+                    </g>
+                    <defs>
+                        <filter id="filter0_f_6_2" x="0" y="0" width="5401" height="3910" filterUnits="userSpaceOnUse"
+                            color-interpolation-filters="sRGB">
+                            <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                            <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
+                            <feGaussianBlur stdDeviation="500" result="effect1_foregroundBlur_6_2" />
+                        </filter>
+                    </defs>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Tree silhouettes for depth — 6 layers (3 trees × left/right, different scales/opacities) -->
+        <!-- Tree Layer 1 LEFT: Closest, largest, least blur -->
+        <!-- Wrapped tree zodat sway-animatie op wrapper draait en JS transform op tree werkt -->
+        <div class="tree-wrapper tree-wrapper-left-1">
+            <div class="tree-layer tree-left tree-left-1" aria-hidden="true">
+                <img src="assets/img/vector 6.svg" alt="" style="width: 100%; height: auto; display: block;">
+            </div>
+        </div>
+
+        <!-- Tree Layer 1 RIGHT: Closest, largest, least blur (mirrored side) -->
+        <!-- Wrapped tree zodat sway-animatie op wrapper draait en JS transform op tree werkt -->
+        <div class="tree-wrapper tree-wrapper-right-1">
+            <div class="tree-layer tree-right tree-right-1" aria-hidden="true">
+                <img src="assets/img/vector 6.svg" alt="" style="width: 100%; height: auto; display: block;">
+            </div>
+        </div>
+
+        <!-- Tree Layer 2 LEFT: Mid-depth, medium scale, moderate blur -->
+        <!-- Wrapped tree zodat sway-animatie op wrapper draait en JS transform op tree werkt -->
+        <div class="tree-wrapper tree-wrapper-left-2">
+            <div class="tree-layer tree-left tree-left-2" aria-hidden="true">
+                <img src="assets/img/vector 7.svg" alt="" style="width: 100%; height: auto; display: block;">
+            </div>
+        </div>
+
+        <!-- Tree Layer 2 RIGHT: Mid-depth, medium scale, moderate blur -->
+        <!-- Wrapped tree zodat sway-animatie op wrapper draait en JS transform op tree werkt -->
+        <div class="tree-wrapper tree-wrapper-right-2">
+            <div class="tree-layer tree-right tree-right-2" aria-hidden="true">
+                <img src="assets/img/vector 8.svg" alt="" style="width: 100%; height: auto; display: block;">
+            </div>
+        </div>
+
+        <!-- Tree Layer 3 LEFT: Far back, smallest scale, heavy blur -->
+        <!-- Wrapped tree zodat sway-animatie op wrapper draait en JS transform op tree werkt -->
+        <div class="tree-wrapper tree-wrapper-left-3">
+            <div class="tree-layer tree-left tree-left-3" aria-hidden="true">
+                <img src="assets/img/vector 8.svg" alt="" style="width: 100%; height: auto; display: block;">
+            </div>
+        </div>
+
+        <!-- Tree Layer 3 RIGHT: Far back, smallest scale, heavy blur -->
+        <!-- Wrapped tree zodat sway-animatie op wrapper draait en JS transform op tree werkt -->
+        <div class="tree-wrapper tree-wrapper-right-3">
+            <div class="tree-layer tree-right tree-right-3" aria-hidden="true">
+                <img src="assets/img/vector 7.svg" alt="" style="width: 100%; height: auto; display: block;">
+            </div>
+        </div>
+
+        <!-- Brown Trees for Scene 3 (initially hidden, animated in during 2-3 transition) -->
+        <!-- Tree Layer 1 LEFT BROWN -->
+        <div class="tree-wrapper tree-wrapper-brown-left-1">
+            <div class="tree-layer tree-left tree-left-1" aria-hidden="true" style="opacity:0; pointer-events:none;">
+                <img src="assets/img/brown (1).svg" alt="" style="width: 100%; height: auto; display: block;">
+            </div>
+        </div>
+        <!-- Tree Layer 1 RIGHT BROWN -->
+        <div class="tree-wrapper tree-wrapper-brown-right-1">
+            <div class="tree-layer tree-right tree-right-1" aria-hidden="true" style="opacity:0; pointer-events:none;">
+                <img src="assets/img/brown (1).svg" alt="" style="width: 100%; height: auto; display: block;">
+            </div>
+        </div>
+        <!-- Tree Layer 2 LEFT BROWN -->
+        <div class="tree-wrapper tree-wrapper-brown-left-2">
+            <div class="tree-layer tree-left tree-left-2" aria-hidden="true" style="opacity:0; pointer-events:none;">
+                <img src="assets/img/brown (2).svg" alt="" style="width: 100%; height: auto; display: block;">
+            </div>
+        </div>
+        <!-- Tree Layer 2 RIGHT BROWN -->
+        <div class="tree-wrapper tree-wrapper-brown-right-2">
+            <div class="tree-layer tree-right tree-right-2" aria-hidden="true" style="opacity:0; pointer-events:none;">
+                <img src="assets/img/brown (2).svg" alt="" style="width: 100%; height: auto; display: block;">
+            </div>
+        </div>
+        <!-- Tree Layer 3 LEFT BROWN -->
+        <div class="tree-wrapper tree-wrapper-brown-left-3">
+            <div class="tree-layer tree-left tree-left-3" aria-hidden="true" style="opacity:0; pointer-events:none;">
+                <img src="assets/img/brown (3).svg" alt="" style="width: 100%; height: auto; display: block;">
+            </div>
+        </div>
+        <!-- Tree Layer 3 RIGHT BROWN -->
+        <div class="tree-wrapper tree-wrapper-brown-right-3">
+            <div class="tree-layer tree-right tree-right-3" aria-hidden="true" style="opacity:0; pointer-events:none;">
+                <img src="assets/img/brown (3).svg" alt="" style="width: 100%; height: auto; display: block;">
+            </div>
+        </div>
+
+        <!-- Leaves Trees for Scene 5 (initially hidden, animated in during 4-5 transition) -->
+        <!-- Tree Layer 1 LEFT LEAVES: Closest, largest, least blur -->
+        <div class="tree-wrapper tree-wrapper-leaves-left-1">
+            <div class="tree-layer tree-left tree-left-1" aria-hidden="true" style="opacity:0; pointer-events:none;">
+                <img src="assets/img/leaves (1).svg" alt="" style="width:100%;height:auto;display:block;">
+            </div>
+        </div>
+        <!-- Tree Layer 1 RIGHT LEAVES: Closest, largest, least blur (mirrored side) -->
+        <div class="tree-wrapper tree-wrapper-leaves-right-1">
+            <div class="tree-layer tree-right tree-right-1" aria-hidden="true" style="opacity:0; pointer-events:none;">
+                <img src="assets/img/leaves (1).svg" alt="" style="width:100%;height:auto;display:block;">
+            </div>
+        </div>
+        <!-- Tree Layer 2 LEFT LEAVES: Mid-depth -->
+        <div class="tree-wrapper tree-wrapper-leaves-left-2">
+            <div class="tree-layer tree-left tree-left-2" aria-hidden="true" style="opacity:0; pointer-events:none;">
+                <img src="assets/img/leaves (2).svg" alt="" style="width:100%;height:auto;display:block;">
+            </div>
+        </div>
+        <!-- Tree Layer 2 RIGHT LEAVES: Mid-depth (mirrored side) -->
+        <div class="tree-wrapper tree-wrapper-leaves-right-2">
+            <div class="tree-layer tree-right tree-right-2" aria-hidden="true" style="opacity:0; pointer-events:none;">
+                <img src="assets/img/leaves (2).svg" alt="" style="width:100%;height:auto;display:block;">
+            </div>
+        </div>
+        <!-- Tree Layer 3 LEFT LEAVES: Far back -->
+        <div class="tree-wrapper tree-wrapper-leaves-left-3">
+            <div class="tree-layer tree-left tree-left-3" aria-hidden="true" style="opacity:0; pointer-events:none;">
+                <img src="assets/img/leaves (3).svg" alt="" style="width:100%;height:auto;display:block;">
+            </div>
+        </div>
+        <!-- Tree Layer 3 RIGHT LEAVES: Far back (mirrored side) -->
+        <div class="tree-wrapper tree-wrapper-leaves-right-3">
+            <div class="tree-layer tree-right tree-right-3" aria-hidden="true" style="opacity:0; pointer-events:none;">
+                <img src="assets/img/leaves (3).svg" alt="" style="width:100%;height:auto;display:block;">
+            </div>
+        </div>
+
+        <!-- Cherries Trees for Scene 7 (initially hidden, animated in during 6-7 transition) -->
+        <!-- Tree Layer 1 LEFT CHERRIES -->
+        <div class="tree-wrapper tree-wrapper-cherries-left-1">
+            <div class="tree-layer tree-left tree-left-1" aria-hidden="true" style="opacity:0; pointer-events:none;">
+                <img src="assets/img/cherries (1).svg" alt="" style="width:100%;height:auto;display:block;">
+            </div>
+        </div>
+        <!-- Tree Layer 1 RIGHT CHERRIES -->
+        <div class="tree-wrapper tree-wrapper-cherries-right-1">
+            <div class="tree-layer tree-right tree-right-1" aria-hidden="true" style="opacity:0; pointer-events:none;">
+                <img src="assets/img/cherries (1).svg" alt="" style="width:100%;height:auto;display:block;">
+            </div>
+        </div>
+        <!-- Tree Layer 2 LEFT CHERRIES -->
+        <div class="tree-wrapper tree-wrapper-cherries-left-2">
+            <div class="tree-layer tree-left tree-left-2" aria-hidden="true" style="opacity:0; pointer-events:none;">
+                <img src="assets/img/cherries (2).svg" alt="" style="width:100%;height:auto;display:block;">
+            </div>
+        </div>
+        <!-- Tree Layer 2 RIGHT CHERRIES -->
+        <div class="tree-wrapper tree-wrapper-cherries-right-2">
+            <div class="tree-layer tree-right tree-right-2" aria-hidden="true" style="opacity:0; pointer-events:none;">
+                <img src="assets/img/cherries (2).svg" alt="" style="width:100%;height:auto;display:block;">
+            </div>
+        </div>
+        <!-- Tree Layer 3 LEFT CHERRIES -->
+        <div class="tree-wrapper tree-wrapper-cherries-left-3">
+            <div class="tree-layer tree-left tree-left-3" aria-hidden="true" style="opacity:0; pointer-events:none;">
+                <img src="assets/img/cherries (3).svg" alt="" style="width:100%;height:auto;display:block;">
+            </div>
+        </div>
+        <!-- Tree Layer 3 RIGHT CHERRIES -->
+        <div class="tree-wrapper tree-wrapper-cherries-right-3">
+            <div class="tree-layer tree-right tree-right-3" aria-hidden="true" style="opacity:0; pointer-events:none;">
+                <img src="assets/img/cherries (3).svg" alt="" style="width:100%;height:auto;display:block;">
+            </div>
+        </div>
+
+        <div class="bubble" id="test-bubble" data-template="bubble-content-scene1"><span class="bubble-label">Waar ben
+                ik?</span></div>
+
+        <!-- Foreground fog is provided by SVGs now; procedural foreground layers removed. -->
+
+        <!-- Content templates for each bubble: edit these to customize each bubble's expanded content -->
+        <!-- Scene 1 Bubble Content -->
+        <template id="bubble-content-scene1">
+            <div class="bubble-content">
+                <div style="max-width:860px;">
+                    <h1 class="bubble-title" style="font-size:36px;margin:0 0 8px;">Welkom bij <br> FogResolve(AI):</h1>
+                    <p class="bubble-sub" style="font-size:16px;line-height:1.5;margin:0 0 18px;">
+                        <span class="sentence">Je staat midden in het mistige bos van AI, waar allerlei stemmen
+                            samenkomen: professionals, studenten en onderzoekers delen hun inzichten en
+                            ervaringen.</span>
+                        <span class="sentence">FogResolve(AI) helpt je de mist te verlichten en stap voor stap te
+                            ontdekken wat AI betekent voor werk, studie en dagelijks leven.</span>
+                        <span class="sentence">Zet je eerste stap en verken het pad dat anderen al bewandeld
+                            hebben.</span>
+                    </p>
+                    <div style="margin-top:12px;">
+                        <button id="bubble-cta" class="cta">Pop!</button>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+        <!-- Scene 2 Bubble Content Templates -->
+        <template id="bubble-content-alpha">
+            <div class="bubble-content">
+                <div>
+                    <h1 class="bubble-title" style="font-size:36px;margin:0 0 8px;">Volgens Copilot</h1>
+                    <p class="bubble-sub" style="font-size:16px;line-height:1.5;margin:0 0 18px;"><span
+                            class="sentence">AI versnelt de uitvoering en democratiseert technische vaardigheden,
+                            waardoor mensen zoals jij creatieve visies kunnen bouwen zonder jarenlange
+                            programmeerervaring.</span> <span class="sentence">De echte waarde komt nog steeds van
+                            menselijke creativiteit - het concept, ontwerpbeslissingen en visie - terwijl AI de
+                            technische implementatie verzorgt.</span> <span class="sentence">Het verschuift werk van
+                            "code schrijven" naar "code regisseren", wat een andere vaardigheid is maar geen vervanging
+                            voor goed oordeelsvermogen en helder denken.</span></p>
+                    <p class="bubble-source" style="font-size:11px;opacity:0.7;margin:8px 0 0 0;font-style:italic;">
+                        ~Github Copilot</p>
+                    <div style="margin-top:12px;">
+                        <button id="bubble-cta" class="cta">Pop!</button>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+        <template id="bubble-content-beta">
+            <div class="bubble-content">
+                <div>
+                    <h1 class="bubble-title" style="font-size:36px;margin:0 0 8px;">De visie van:<br>ChatGPT</h1>
+                    <p class="bubble-sub" style="font-size:16px;line-height:1.5;margin:0 0 18px;"><span
+                            class="sentence">AI geeft je als frontend/UX/designmaker een bliksemsnelle assistent ⚡ die veel uitvoerwerk overneemt, zodat jij je kunt richten op finesse ✨ en richting.</span> <span class="sentence">Je rol verschuift van produceren naar regisseren 🎬, omdat jij bepaalt welke ideeën, flows of visuals echt werken voor mensen.</span> <span class="sentence">AI kan varianten genereren 🎨, maar jouw creatieve lens blijft de beslissende factor 👁️.</span> <span class="sentence">UX wordt strategischer doordat je meer met gedrag, ethiek ⚖️ en systeemdynamiek werkt.</span> <span class="sentence">Frontend krijgt meer automatisering 🤖, maar kwaliteit, accessibility ♿ en consistentie blijven menselijk vakmanschap.</span> <span class="sentence">Designers die AI slim inzetten krijgen meer ruimte om diep te denken 💭 in plaats van pixels te poetsen.</span> <span class="sentence">Jij groeit uit tot curator van ervaring 🧭 in plaats van alleen maker.</span> <span class="sentence">In deze nieuwe laag van het digitale landschap 🌐 wordt jouw gevoel voor menselijkheid het kompas.</span></p>
+                    <p class="bubble-source" style="font-size:11px;opacity:0.7;margin:8px 0 0 0;font-style:italic;">
+                        ~ChatGPT</p>
+                    <div style="margin-top:12px;">
+                        <button id="bubble-cta" class="cta">Pop!</button>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+        <template id="bubble-content-gamma">
+            <div class="bubble-content">
+                <div>
+                    <h1 class="bubble-title" style="font-size:36px;margin:0 0 8px;">Wat is AI?</h1>
+                    <p class="bubble-sub" style="font-size:16px;line-height:1.5;margin:0 0 18px;"><span
+                            class="sentence">AI leert van heel veel voorbeelden en probeert daarna te voorspellen wat past, maar het doet dat volledig op basis van wat jij invoert.</span> <span class="sentence">Jouw woorden zijn het startschot: zonder jouw richting weet het systeem niet welke kant het op moet.</span> <span class="sentence">Het denkt niet zelf, het bouwt alleen verder op de hints en context die jij geeft.</span> <span class="sentence">Daardoor voelt het soms slim, terwijl het eigenlijk jouw bedoeling probeert te volgen.</span> <span class="sentence">Jij bent de bron, AI is de versnellingsknop.</span></p>
+                    <p class="bubble-source" style="font-size:11px;opacity:0.7;margin:8px 0 0 0;font-style:italic;">
+                        ~ChatGPT</p>
+                    <div style="margin-top:12px;">
+                        <button id="bubble-cta" class="cta">Pop!</button>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+        <!-- Scene 4 Bubble Content Templates -->
+        <template id="bubble-content-delta">
+            <div class="bubble-content">
+                <div>
+                    <h1 class="bubble-title" style="font-size:36px;margin:0 0 8px;">Geneve</h1>
+                    <p class="bubble-sub" style="font-size:16px;line-height:1.5;margin:0 0 18px;">
+                        <span class="sentence">Nou, wat ik sowieso vind van AI; het is een gewoon goeie tool, die kan je gewoon heel goed inzetten.</span>
+                        <span class="sentence">Maar je moet wel heel goed weten hoe je het inzet, wat je er allemaal mee kan doen.</span>
+                        <span class="sentence">Wat we wel merken is dat de creativiteit van studenten achteruit gaat.</span>
+                        <span class="sentence">Dus, we moeten meer kijken hoe kunnen ze AI inzetten zonder creativiteit te verliezen.</span>
+                    </p>
+                    <p class="bubble-source" style="font-size:11px;opacity:0.7;margin:8px 0 0 0;font-style:italic;">
+                        ~Geneve Angelista,<br>Docent Maatschappij en Interactie CMD</p>
+                    <div style="margin-top:12px;">
+                        <button id="bubble-cta" class="cta">Pop!</button>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+        <template id="bubble-content-epsilon">
+            <div class="bubble-content">
+                <div>
+                    <h1 class="bubble-title" style="font-size:36px;margin:0 0 8px;">Paul Blok</h1>
+                    <p class="bubble-sub" style="font-size:16px;line-height:1.5;margin:0 0 18px;"><span
+                            class="sentence">Nou kijk, zoals onze collega Pascal Wiggers, de Lector  Responsible IT, zegt: "AI is een prachtige, onbetrouwbare technologie".</span> <span class="sentence">Hij gaat ervan uit dat er heel veel kan en er heel veel mogelijkheden zijn voor zo'n beetje alles en nog wat en dat het ook oke is om te gebruiken.</span> <span class="sentence">Als je je maar realiseert dat het fundamenteel onbetrouwbaar is, omdat het geen intelligentie heeft, maar een taalmodel is dat gokt op wat het beste volgende woord is, wat het beste volgende plaatje is, enzovoort.</span> <span class="sentence">Dus in die context; ervan uitgaande dat het onbetrouwbaar is en met dat in het achterhoofd, verstandige dingen ermee doen, is een goed idee.</span></p>
+                    <p class="bubble-source" style="font-size:11px;opacity:0.7;margin:8px 0 0 0;font-style:italic;">
+                        ~Paul Blok,<br>Opleidingscoördinator CMD Amsterdam</p>
+                    <div style="margin-top:12px;">
+                        <button id="bubble-cta" class="cta">Pop!</button>
+                    </div>
+                </div>
+            </div>
+        </template>
+        
+        <template id="bubble-content-zeta">
+            <div class="bubble-content">
+                <div>
+                    <h1 class="bubble-title" style="font-size:36px;margin:0 0 8px;">Michiel</h1>
+                    <p class="bubble-sub" style="font-size:16px;line-height:1.5;margin:0 0 18px;">
+                        <span class="sentence">Mijn kijk op AI is dat we echt in de kinderschoenen staan, de techniek.</span>
+                        <span class="sentence">Dus, dat we dat heel erg aan het ontdekken zijn, dat dat steeds geaffanceerder wordt.</span>
+                        <span class="sentence">Waarbij je de aankomende jaren gaat zien dat het steeds verder ontwikkelt tot echt een superintelligentie, waarbij allerlei netwerken aan elkaar zijn gekoppeld.</span>
+                        <span class="sentence">En als we dan kijken naar nog verdere toekomst dan gaat het ons denken ook echt heel erg ondersteunen.</span>
+                        <span class="sentence">Dus, dan zal je straks zien dat ons bewustzijn daaraan gekoppeld is en de wijze waarop we daarover nadenken.</span>
+                        <span class="sentence" data-page="2">En dat gaat echt ongekende mogelijkheden creëeren voor de mensheid en zeker voor digitale ontwerpers in het bijzonder.</span>
+                    </p>
+                    <p class="bubble-source" style="font-size:11px;opacity:0.7;margin:8px 0 0 0;font-style:italic;">
+                        ~Michiel Bernsen,<br>Propedeuse coordinator CMD</p>
+                    <div style="margin-top:12px;">
+                        <button id="bubble-cta" class="cta">Pop!</button>
+                    </div>
+                </div>
+            </div>
+        </template>
+        
+        <!-- Scene 6 Bubble Content Templates -->
+        <template id="bubble-content-eta">
+            <div class="bubble-content">
+                <div>
+                    <h1 class="bubble-title" style="font-size:36px;margin:0 0 8px;">Joey</h1>
+                    <p class="bubble-sub" style="font-size:16px;line-height:1.5;margin:0 0 18px;">
+                        <span class="sentence">AI is voor mij als een zeer krachtig verlengstuk van mijn vaardigheden: het versnelt analyse en uitvoering van (vooral repetitieve) taken.</span>
+                        <span class="sentence">Mijn werk wordt niet vervangen door AI, maar de aard van het werk verandert wel.</span>
+                        <span class="sentence">De focus komt juist nog meer te liggen op diepgaande vakkennis en menselijk inzicht, want zonder aansturing van gekwalificeerde mensen zal AI niet veel verder komen dan de 'slop' waar we op dit moment mee overspoeld worden.</span>
+                    </p>
+                    <p class="bubble-source" style="font-size:11px;opacity:0.7;margin:8px 0 0 0;font-style:italic;">
+                        ~Joey De Jong,<br>Lead Frontend Developer</p>
+                    <div style="margin-top:12px;">
+                        <button id="bubble-cta" class="cta">Pop!</button>
+                    </div>
+                </div>
+            </div>
+        </template>
+        
+        <template id="bubble-content-theta">
+            <div class="bubble-content">
+                <div>
+                    <h1 class="bubble-title" style="font-size:36px;margin:0 0 8px;">Kathleen</h1>
+                    <p class="bubble-sub" style="font-size:16px;line-height:1.5;margin:0 0 18px;"><span
+                            class="sentence">Ik denk dat AI een waardevolle ontwikkeling is en juist goed ingezet kan worden in het werkveld.</span> <span class="sentence">Zo merk ik zelf dat het mijn productiviteit verhoogd en ik efficiëenter werk dan voorheen.</span> <span class="sentence">Taken die ik minder leuk vind om te doen laat ik door AI uitvoeren, zo houd ik meer ruimte en creativiteit over voor de leuke dingen.</span> <span class="sentence">Ook kan het goed ingezet worden als sparringpartner.</span></p>
+                    <p class="bubble-source" style="font-size:11px;opacity:0.7;margin:8px 0 0 0;font-style:italic;">
+                        ~Kathleen van Dam,<br>Medior UX Designer</p>
+                    <div style="margin-top:12px;">
+                        <button id="bubble-cta" class="cta">Pop!</button>
+                    </div>
+                </div>
+            </div>
+        </template>
+        
+        <template id="bubble-content-iota">
+            <div class="bubble-content">
+                <div>
+                    <h1 class="bubble-title" style="font-size:36px;margin:0 0 8px;">Marieke</h1>
+                    <p class="bubble-sub" style="font-size:16px;line-height:1.5;margin:0 0 18px;"><span
+                            class="sentence">In mijn werk als UX Researcher zie ik AI niet als vervanging van menselijk inzicht, maar als een katalysator die mijn werk sneller en slimmer maakt.</span> <span class="sentence">Altijd met een human-in-the-loop, zodat kwaliteit en context behouden blijven.</span> <span class="sentence">AI helpt me onderzoek sneller te analyseren en grote hoeveelheden data samen te brengen, waardoor inzichten vollediger en beter onderbouwd zijn.</span> <span class="sentence">Maar het stopt niet bij analyse: ik gebruik AI om onderzoeksuitkomsten – zoals persona's – tot leven te brengen, zodat collega's er écht iets mee doen.</span> <span class="sentence">Voor mij is AI een partner die data toegankelijk maakt en de impact van UX Research vergroot.</span></p>
+                    <p class="bubble-source" style="font-size:11px;opacity:0.7;margin:8px 0 0 0;font-style:italic;">
+                        ~Marieke Mol,<br>Senior UX-Researcher</p>
+                    <div style="margin-top:12px;">
+                        <button id="bubble-cta" class="cta">Pop!</button>
+                    </div>
+                </div>
+            </div>
+        </template>
+        
+        <template id="bubble-content-kappa">
+            <div class="bubble-content">
+                <div>
+                    <h1 class="bubble-title" style="font-size:36px;margin:0 0 8px;">Rron</h1>
+                    <p class="bubble-sub" style="font-size:16px;line-height:1.5;margin:0 0 18px;">
+                        <span class="sentence">AI is misschien wel de grootste uitvinding die de mensheid ooit heeft gekend.</span>
+                        <span class="sentence">Het gaat alles veranderen.</span>
+                        <span class="sentence">De wereld zal nooit meer hetzelfde zijn en de geest is uit de fles, dus we kunnen ook niet meer terug.</span>
+                        <span class="sentence">Iedereen zal ermee moeten leren werken, want AI wordt een essentiële skill, net zoals lezen en schrijven dat zijn of misschien wel waren.</span>
+                        <span class="sentence">Voor mij persoonlijk heeft het al enorme kansen gebracht: ik werk efficiënter, tot wel 40 à 50% meer output per dag, met veel minder moeite.</span>
+                        <span class="sentence" data-page="2">En ik verwacht ook dat iedereen ongeveer op zo'n niveau output zal moeten leveren om mee te kunnen.</span>
+                        <span class="sentence" data-page="2">Dat verschilt per beroep, maar in de techwereld is het duidelijk: wie niet meebeweegt, loopt het risico achter te blijven.</span>
+                        <span class="sentence" data-page="2">Dat betekent ook dat we als samenleving moeten nadenken over hoe we omgaan met mensen die die stap niet kunnen maken.</span>
+                        <span class="sentence" data-page="2">AI is ontwrichtend, ja, maar ook vol potentie.</span>
+                        <span class="sentence" data-page="2">Het is aan ons om die kracht goed te benutten.</span>
+                    </p>
+                    <p class="bubble-source" style="font-size:11px;opacity:0.7;margin:8px 0 0 0;font-style:italic;">
+                        ~Rron Nushi,<br>Product lead AI en Content.</p>
+                    <div style="margin-top:12px;">
+                        <button id="bubble-cta" class="cta">Pop!</button>
+                    </div>
+                </div>
+            </div>
+        </template>
+        
+        <template id="bubble-content-lambda">
+            <div class="bubble-content">
+                <div>
+                    <h1 class="bubble-title" style="font-size:36px;margin:0 0 8px;">Rawaz</h1>
+                    <p class="bubble-sub" style="font-size:16px;line-height:1.5;margin:0 0 18px;">
+                        <span class="sentence">Ik zie AI niet als een bedrijging, maar als een soort cognitieve spiegel.</span>
+                        <span class="sentence">Een partner die jouw waarden volgt, jouw manier van denken versterkt en je vanuit een helicopterview helpt om betere keuzes te maken.</span>
+                        <span class="sentence">Het geeft je zekerheid, omdat je niet in je eigen bubbel blijft hangen.</span>
+                        <span class="sentence">Maar dit werkt alleen als we AI gebruiken om onze ideeën te verdiepen en te versterken, niet om het denkwerk over te slaan.</span>
+                        <span class="sentence">AI hoort ons denkwerk te verhogen, niet te verlagen.</span>
+                    </p>
+                    <p class="bubble-source" style="font-size:11px;opacity:0.7;margin:8px 0 0 0;font-style:italic;">
+                        ~Rawaz Tahir,<br>UX-Lead</p>
+                    <div style="margin-top:12px;">
+                        <button id="bubble-cta" class="cta">Pop!</button>
+                    </div>
+                </div>
+            </div>
+        </template>
+        
+        <!-- Scene 8 Bubble Content Template -->
+        <template id="bubble-content-tobias">
+            <div class="bubble-content">
+                <div>
+                    <h1 class="bubble-title" style="font-size:36px;margin:0 0 8px;">Visie van Tobias</h1>
+                    <p class="bubble-sub" style="font-size:16px;line-height:1.5;margin:0 0 18px;">
+                        <span class="sentence">AI is voor mij één van de beste uitvindingen, omdat het me ondersteunt bij taken waar ik zelf minder energie van krijg.</span>
+                        <span class="sentence">Vooral bij programmeren merk ik dat ik dankzij AI sneller verder kan, juist omdat ik genoeg basiskennis heb om te zien wanneer iets fout gaat en het model de juiste richting in kan duwen.</span>
+                        <span class="sentence">Zonder alles wat ik bij CMD heb geleerd, had ik nooit deze hele interface samen met AI kunnen maken.</span>
+                        <span class="sentence">Het leuke is dat er inmiddels voor bijna elke CMD-richting wel een tool bestaat die je kan helpen.</span>
+                        <span class="sentence">Je moet alleen wel begrijpen waar je mee werkt, anders kun je AI ook niet sturen, en dat heb ik tijdens mijn studie geleerd en neem ik nu mee in mijn werk.</span>
+                        <span class="sentence">Misschien vind ik het gewoon leuk om de baas te spelen, maar dan moet je wél weten hoe het bedrijf draait.</span>
+                        <span class="sentence">De angst rond AI komt naar mijn idee vooral door niet weten wat het eigenlijk is.</span>
+                        <span class="sentence">De afgelopen jaren zijn er veel verhalen geweest over banen die verdwijnen, maar ik denk dat je vooral moet gaan lezen, proberen en ermee spelen om te snappen hoe je ermee omgaat.</span>
+                        <span class="sentence">In dat opzicht werkt het bijna hetzelfde als een Adobe-programma: enorm veel functies verstopt achter toetsen die je zelf moet ontdekken.</span>
+                        <span class="sentence">Ik vergelijk de opkomst van AI daarom vaak met de rekenmachine, die eerst ook zorgen opriep maar uiteindelijk juist ruimte maakte voor moeilijker en creatiever werk.</span>
+                    </p>
+                    <p class="bubble-source" style="font-size:11px;opacity:0.7;margin:8px 0 0 0;font-style:italic;">
+                        ~Tobias van der Waals<br>UX-Designer, student<br>Communicatie en Multimedia Design</p>
+                    <div style="margin-top:12px;">
+                        <button id="bubble-cta" class="cta">Pop!</button>
+                    </div>
+                </div>
+            </div>
+        </template>
+        
+        <template id="bubble-content-mu">
+            <div class="bubble-content">
+                <div>
+                    <h1 class="bubble-title" style="font-size:36px;margin:0 0 8px;">Mu Reflectie</h1>
+                    <p class="bubble-sub" style="font-size:16px;line-height:1.5;margin:0 0 18px;"><span
+                            class="sentence">Mu bubbel met creatieve animatie.</span> <span class="sentence">Scene 8 is het hoogtepunt voor het eindscherm.</span></p>
+                    <p class="bubble-source" style="font-size:11px;opacity:0.7;margin:8px 0 0 0;font-style:italic;">
+                        Bron: [Placeholder]</p>
+                    <div style="margin-top:12px;">
+                        <button id="bubble-cta" class="cta">Pop!</button>
+                    </div>
+                </div>
+            </div>
+        </template>
+        
+        <template id="bubble-content-nu">
+            <div class="bubble-content">
+                <div>
+                    <h1 class="bubble-title" style="font-size:36px;margin:0 0 8px;">Nu Conclusie</h1>
+                    <p class="bubble-sub" style="font-size:16px;line-height:1.5;margin:0 0 18px;"><span
+                            class="sentence">Nu bubbel placeholder voor creatieve expressie.</span> <span class="sentence">Drie bubbels met maximale creativiteit in animaties.</span></p>
+                    <p class="bubble-source" style="font-size:11px;opacity:0.7;margin:8px 0 0 0;font-style:italic;">
+                        Bron: [Placeholder]</p>
+                    <div style="margin-top:12px;">
+                        <button id="bubble-cta" class="cta">Pop!</button>
+                    </div>
+                </div>
+            </div>
+        </template>
+        
+        <template id="bubble-content-xi">
+            <div class="bubble-content">
+                <div>
+                    <h1 class="bubble-title" style="font-size:36px;margin:0 0 8px;">Xi Synthese</h1>
+                    <p class="bubble-sub" style="font-size:16px;line-height:1.5;margin:0 0 18px;"><span
+                            class="sentence">Xi als laatste bubbel voor het eindscherm.</span> <span class="sentence">Unieke animatie die alles samenbrengt.</span></p>
+                    <p class="bubble-source" style="font-size:11px;opacity:0.7;margin:8px 0 0 0;font-style:italic;">
+                        Bron: [Placeholder]</p>
+                    <div style="margin-top:12px;">
+                        <button id="bubble-cta" class="cta">Pop!</button>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+        <!-- Legacy fallback template (kept for compatibility) -->
+        <template id="bubble-template">
+            <div class="bubble-content">
+                <div>
+                    <h1 class="bubble-title" style="font-size:36px;margin:0 0 8px;">Welcome to De:Fog</h1>
+                    <p class="bubble-sub" style="font-size:16px;line-height:1.5;margin:0 0 18px;">This pane reveals more
+                        about the selected bubble. Replace this with your app UI.</p>
+                    <div style="margin-top:12px;">
+                        <button id="bubble-cta" class="cta">Get Started</button>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+        <!-- Scene 2 template: spawn three bubbles for the next scene. -->
+        <template id="scene-2-template">
+            <div class="scene-2">
+                <div class="bubble bubble-orbit-alpha" data-template="bubble-content-alpha"
+                    style="top:30%;left:28%;transform:translate(-50%,-50%) scale(0.7);opacity:0;">
+                    <span class="bubble-label">Volgens Copilot</span>
+                </div>
+                <div class="bubble bubble-orbit-beta" data-template="bubble-content-beta"
+                    style="top:52%;left:72%;transform:translate(-50%,-50%) scale(0.7);opacity:0;">
+                    <span class="bubble-label">De visie van:<br>ChatGPT</span>
+                </div>
+                <div class="bubble bubble-orbit-gamma" data-template="bubble-content-gamma"
+                    style="top:72%;left:42%;transform:translate(-50%,-50%) scale(0.7);opacity:0;">
+                    <span class="bubble-label">Wat is AI?</span>
+                </div>
+            </div>
+        </template>
+
+        <!-- Scene 4 template: spawn three bubbles for Scene 4 -->
+        <template id="scene-4-template">
+            <div class="scene-4">
+                <div class="bubble bubble-delta" data-template="bubble-content-delta"
+                    style="top:35%;left:25%;transform:translate(-50%,-200%) scale(0.5);opacity:0;">
+                    <span class="bubble-label">Geneve</span>
+                </div>
+                <div class="bubble bubble-epsilon" data-template="bubble-content-epsilon"
+                    style="top:65%;left:70%;transform:translate(-50%,100%) scale(0.8);opacity:0;">
+                    <span class="bubble-label">Paul Blok</span>
+                </div>
+                <div class="bubble bubble-zeta" data-template="bubble-content-zeta"
+                    style="top:45%;left:55%;transform:translate(-50%,50%) scale(0.6);opacity:0;">
+                    <span class="bubble-label">Michiel</span>
+                </div>
+            </div>
+        </template>
+
+        <!-- Scene 3 template: Titel Segment 1 -->
+        <template id="scene-3-template">
+            <div class="scene-3-content"
+                style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;color:#F0EAD6;z-index:100;">
+                <h1 style="font-size:48px;margin:0 0 20px;">AI bij CMD Amsterdam</h1>
+                <p style="font-size:20px;line-height:1.6;max-width:600px;margin:0 auto 30px;">Luister naar de inzichten van de CMD-experts en ontdek hoe AI mogelijkheden biedt voor onze studie.</p>
+                <button id="scene3-cta"
+                    style="margin-top:20px;padding:12px 28px;background:#2B6DF6;color:white;border:none;border-radius:8px;cursor:pointer;font-size:18px;">Verder</button>
+            </div>
+        </template>
+
+        <!-- Scene 5 template: Titel Segment 2 -->
+        <template id="scene-5-template">
+            <div class="scene-5-content"
+                style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;color:#F0EAD6;z-index:100;">
+                <h1 style="font-size:48px;margin:0 0 20px;">AI in het werkveld</h1>
+                <p style="font-size:20px;line-height:1.6;max-width:600px;margin:0 auto 30px;">Huiver voor de inzichten die medewerkers van Nextens delen over AI in hun dagelijkse werkzaamheden.</p>
+                <button id="scene5-cta"
+                    style="margin-top:20px;padding:12px 28px;background:#2B6DF6;color:white;border:none;border-radius:8px;cursor:pointer;font-size:18px;">Verder</button>
+            </div>
+        </template>
+        
+        <!-- Scene 6 template: 5 unique bubbles -->
+        <template id="scene-6-template">
+            <div class="scene-6">
+                <div class="bubble bubble-eta" data-template="bubble-content-eta"
+                    style="top:25%;left:20%;transform:translate(-50%,-150%) rotate(-15deg) scale(0.4);opacity:0;">
+                    <span class="bubble-label">Joey</span>
+                </div>
+                <div class="bubble bubble-theta" data-template="bubble-content-theta"
+                    style="top:35%;left:75%;transform:translate(-50%,200%) scale(0.3);opacity:0;">
+                    <span class="bubble-label">Kathleen</span>
+                </div>
+                <div class="bubble bubble-iota" data-template="bubble-content-iota"
+                    style="top:calc(100% + 200px);left:20%;transform:translate(-50%,-50%) scale(0.5);opacity:0;">
+                    <span class="bubble-label">Marieke</span>
+                </div>
+                <div class="bubble bubble-kappa" data-template="bubble-content-kappa"
+                    style="top:90%;left:85%;transform:translate(-200%,-50%) scale(0.6);opacity:0;">
+                    <span class="bubble-label">Rron</span>
+                </div>
+                <div class="bubble bubble-lambda" data-template="bubble-content-lambda"
+                    style="top:50%;left:55%;transform:translate(-50%,-50%) scale(0);opacity:0;">
+                    <span class="bubble-label">Rawaz</span>
+                </div>
+            </div>
+        </template>
+        
+        <!-- Scene 7 template: Titel Segment 3 -->
+        <template id="scene-7-template">
+            <div class="scene-7-content"
+                style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;color:#F0EAD6;z-index:100;">
+                <h1 style="font-size:48px;margin:0 0 20px;">Visie van de maker</h1>
+                <p style="font-size:20px;line-height:1.6;max-width:600px;margin:0 auto 30px;">Dit bemistte bos komt tot een helder einde met de visie van de maker. Hierin vertelt Tobias van der Waals hoe hij tegen AI kijkt.</p>
+                <button id="scene7-cta"
+                    style="margin-top:20px;padding:12px 28px;background:#2B6DF6;color:white;border:none;border-radius:8px;cursor:pointer;font-size:18px;">Verder</button>
+            </div>
+        </template>
+        
+        <!-- Scene 8 template: 3 creative bubbles -->
+        <template id="scene-8-template">
+            <div class="scene-8">
+                <div class="bubble bubble-tobias" data-template="bubble-content-tobias"
+                    style="top:50%;left:50%;transform:translate(-50%, -50%) scale(0) rotate(720deg);opacity:0;">
+                    <span class="bubble-label">Visie van Tobias</span>
+                </div>
+            </div>
+        </template>
+        
+        <!-- Scene 9 template: Eindscherm -->
+        <template id="scene-9-template">
+            <div class="scene-9-content"
+                style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;color:#F0EAD6;z-index:100;max-width:800px;">
+                <h1 style="font-size:52px;margin:0 0 24px;">Out of the woods!</h1>
+                <p style="font-size:22px;line-height:1.7;margin:0 auto 40px;">Ik hoop je visie op AI te hebben verrijkt met deze reis door het bemistte bos van FogResolve(AI). Bedankt voor alle aandacht.</p>
+                <button id="restart-button" class="restart-btn">Opnieuw beginnen</button>
+            </div>
+        </template>
+    </div>
+    <script src="js/main.js"></script>
+</body>
+
+</html>
